@@ -12,7 +12,15 @@ class CategoryController extends Controller
 {
    public function AllCat()
    {
-       return view('admin.category.index');
+
+    // Eloquent ORM way 1---------------------------------------------------
+    // $categories = Category::all();
+    //  $categories = Category::latest()->get();
+
+    // Query Builder way---------------------------------------------------
+    $categories = DB::table('categories')->latest()->get();
+
+       return view('admin.category.index', compact('categories'));
    }
 
    public function AddCat(Request $request)
@@ -28,11 +36,11 @@ class CategoryController extends Controller
 ]);
 
 // Eloquent ORM way 1---------------------------------------------------
-// Category::insert([
-//     'category_name' => $request->category_name,
-//     'user_id' => Auth::user()->id,
-//     'created_at' => Carbon::now()
-// ]);
+Category::insert([
+    'category_name' => $request->category_name,
+    'user_id' => Auth::user()->id,
+    'created_at' => Carbon::now()
+]);
 
 // Eloquent ORM way 2---------------------------------------------------
 // $category = new Category;
@@ -41,11 +49,11 @@ class CategoryController extends Controller
 // $category->save();
 
 // Query Builder way---------------------------------------------------
-$data = array();
-$data['category_name'] = $request->category_name;
-$data['user_id'] = Auth::user()->id;
-$data['created_at'] = Carbon::now();
-DB::table('categories')->insert($data);
+// $data = array();
+// $data['category_name'] = $request->category_name;
+// $data['user_id'] = Auth::user()->id;
+// $data['created_at'] = Carbon::now();
+// DB::table('categories')->insert($data);
 
 return Redirect()->back()->with('success', 'Category Inserted Successfully');
 

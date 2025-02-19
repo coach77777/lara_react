@@ -20,7 +20,7 @@
 
 @if(session('success'))
 <div class="alert alert-success alert-dismissible fade show" role="alert">
-    <strong>{{ session('success') }}</strong> 
+    <strong>{{ session('success') }}</strong>
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
   </div>
 @endif
@@ -40,24 +40,31 @@ All category
         <thead>
           <tr>
             <th scope="col">SL No.</th>
-            <th scope="col">Name</th>
-            <th scope="col">Email</th>
+            <th scope="col">Category Name</th>
+            <th scope="col">User</th>
             <th scope="col">Created At</th>
           </tr>
         </thead>
         <tbody>
-
-
+@php($i =1)
+@foreach($categories as $category)
           <tr>
-            <td></td>
-            <td></td>
+            <th scope="row">{{ $loop->iteration }}</th>
+            <td>{{$category->category_name}}</td>
+            <td>{{$category->user_id }}</td>
+            @if($category->created_at == NULL)
+            <span class="text-danger">No Date Set</span>
+            @else
+            {{-- <td>{{ $category->created_at->diffForHumans() }}</td> --}}
+             {{-- Query Builder --}}
+            <td>{{Carbon\Carbon::parse($category->created_at)->diffForHumans()}}</td>
+            @endif
             {{-- //Eloquent ORM
             <td>{{$user->created_at->diffForHumans()}}</td>--}}
             {{-- Query Builder --}}
             {{-- <td>{{Carbon\Carbon::parse($user->created_at)->diffForHumans()}}</td> --}}
           </tr>
-
-
+@endforeach
         </tbody>
       </table>
 
