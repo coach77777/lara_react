@@ -15,6 +15,10 @@ Route::get('/category/all', [CategoryController::class,'AllCat'])->name('all.cat
 
 Route::post('/category/add', [CategoryController::class,'AddCat'])->name('store.category');
 
+Route::get('/category/edit/{id}', [CategoryController::class, 'Edit'])->name('category.edit');
+Route::post('/category/update/{id}', [CategoryController::class,'Update'])->name('category.update');
+Route::get('/category/softdelete/{id}', [CategoryController::class,'SoftDelete'])->name('category.softdelete');
+
 
 
 

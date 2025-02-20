@@ -3,7 +3,7 @@
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             {{-- {{ __('Dashboard') }} --}}
 
-            All Cateory<b></b>
+            All Category<b></b>
 
         </h2>
     </x-slot>
@@ -43,30 +43,48 @@ All category
             <th scope="col">Category Name</th>
             <th scope="col">User</th>
             <th scope="col">Created At</th>
+            <th scope="col">Action</th>
           </tr>
         </thead>
         <tbody>
-@php($i =1)
+{{-- @php($i =1) --}}
 @foreach($categories as $category)
           <tr>
-            <th scope="row">{{ $loop->iteration }}</th>
+            {{-- <th scope="row">{{ $loop->iteration }}</th> --}}
+            <th scope="row">{{ $categories->firstItem()+$loop->index }}</th>
+            {{-- <th scope="row">{{ $i++ }}</th> --}}
+
             <td>{{$category->category_name}}</td>
-            <td>{{$category->user_id }}</td>
+
+            {{-- EOM changed user_id to user to get name from user table --}}
+            <td>{{ $category->user ? $category->user->name : 'No User' }}</td>
+
+            {{-- with Query Builder just name --}}
+            {{-- <td>{{$category->name}}</td> --}}
+
             @if($category->created_at == NULL)
             <span class="text-danger">No Date Set</span>
             @else
             {{-- <td>{{ $category->created_at->diffForHumans() }}</td> --}}
+
              {{-- Query Builder --}}
             <td>{{Carbon\Carbon::parse($category->created_at)->diffForHumans()}}</td>
             @endif
             {{-- //Eloquent ORM
             <td>{{$user->created_at->diffForHumans()}}</td>--}}
+
             {{-- Query Builder --}}
             {{-- <td>{{Carbon\Carbon::parse($user->created_at)->diffForHumans()}}</td> --}}
+            <td>
+            <a href="{{ route('category.edit', ['id' => $category->id]) }}" class="btn btn-info">Edit</a>
+            <a href="{{ route('category.softdelete', ['id' => $category->id]) }}" class="btn btn-danger">Delete</a>
+            </td>
+
           </tr>
 @endforeach
         </tbody>
       </table>
+      {{ $categories->links() }}
 
 
 
@@ -83,7 +101,7 @@ All category
     <div class="card-body">
 
 
-    <form action={{route('store.category')}} method="POST">
+    <form action="{{ route('store.category') }}" method="POST">
 
         @csrf
 
