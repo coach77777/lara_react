@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\BrandController;
 
 
 Route::get('/', function () {
@@ -21,7 +22,8 @@ Route::get('/category/softdelete/{id}', [CategoryController::class,'SoftDelete']
 Route::get('/category/restore/{id}', [CategoryController::class,'Restore'])->name('category.restore');
 Route::get('/category/pdelete/{id}', [CategoryController::class,'PDelete'])->name('category.pdelete');
 
-
+//Brand Route
+Route::get('/brand/all', [BrandController::class,'AllBrand'])->name('all.brand');
 
 Route::middleware([
     'auth:sanctum',
