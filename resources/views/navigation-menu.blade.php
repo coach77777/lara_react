@@ -16,7 +16,7 @@
                         {{ __('Dashboard') }}
                     </x-nav-link>
 
-                    <x-nav-link href="{{ route('all.category') }}">
+                    <x-nav-link href="{{ route('all.category') }}" >
                        All Category
                     </x-nav-link>
 
