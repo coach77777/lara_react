@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Brand;
 use Carbon\Carbon;
+use Intervention\Image\Facades\Image;
+use App\Models\Multipic;
+use Illuminate\Support\Facades\Redirect;
 
 class BrandController extends Controller
 {
@@ -28,13 +31,19 @@ class BrandController extends Controller
 
      $brand_image = $request->file('brand_image');
 
-         $name_gen = hexdec(uniqid());
-         $img_ext = strtolower($brand_image->getClientOriginalExtension());
-         $img_name = $name_gen.'.'.$img_ext;
-// $name_gen = hexdec(uniqid()).'.'.strtolower($brand_image->getClientOriginalExtension());
-         $up_location = 'image/brand/';
-         $last_img = $up_location.$img_name;
-         $brand_image->move($up_location, $img_name);
+//          $name_gen = hexdec(uniqid());
+//          $img_ext = strtolower($brand_image->getClientOriginalExtension());
+//          $img_name = $name_gen.'.'.$img_ext;
+// // $name_gen = hexdec(uniqid()).'.'.strtolower($brand_image->getClientOriginalExtension());
+//          $up_location = 'image/brand/';
+//          $last_img = $up_location.$img_name;
+//          $brand_image->move($up_location, $img_name);
+
+$name_gen = hexdec(uniqid()).'.'.($brand_image->getClientOriginalExtension());
+Image::make($brand_image)->resize(300,200)->save('image/brand/'.$name_gen);
+
+$last_img = 'image/brand/'.$name_gen;
+
 
          Brand::insert([
               'brand_name' => $request->brand_name,
@@ -103,4 +112,42 @@ class BrandController extends Controller
 
         return Redirect()->back()->with('success', 'Brand Deleted successfully');
     }
+
+    //  this is for multi image
+    public function Multpic(){
+
+        $images = Multipic::all();
+
+        return view('admin.multipic.index', compact('images'));
+    }
+
+    public function StoreImg(Request $request)
+    {
+        // Ensure the request contains images
+        if (!$request->hasFile('image')) {
+            return Redirect()->back()->with('error', 'No images were uploaded.');
+        }
+
+        $images = $request->file('image');
+
+        // Ensure the input is an array, if not, make it an array
+        if (!is_array($images)) {
+            $images = [$images];
+        }
+
+        foreach ($images as $multi_img) {
+            $name_gen = hexdec(uniqid()) . '.' . $multi_img->getClientOriginalExtension();
+            Image::make($multi_img)->resize(200, 200)->save('image/multi/' . $name_gen);
+
+            $last_img = 'image/multi/' . $name_gen;
+
+            Multipic::insert([
+                'image' => $last_img,
+                'created_at' => Carbon::now()
+            ]);
+        }
+
+        return Redirect()->back()->with('success', 'Images inserted successfully');
+    }
+
 }
