@@ -6,6 +6,10 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\BrandController;
 
+Route::get('/email/verify', function () {
+    return view('auth.verify-email');
+})->middleware('auth')->name('verification.notice');
+
 
 Route::get('/', function () {
     return view('welcome');
